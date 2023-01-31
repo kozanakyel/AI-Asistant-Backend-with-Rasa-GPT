@@ -1,0 +1,7 @@
+aioflask
+psycopg2-binary
+flask-sqlalchemy
+python-dotenv
+openai
+gtts
+python-telegram-bot
