@@ -11,13 +11,13 @@ CHATGPT_ENV=os.getenv('CHATGPT')
 openai.api_key = CHATGPT_ENV
 
 response = openai.Image.create(
-  prompt="a blue adidas shoes with different colors lace",
+  prompt="a yellow tshirt with small L char logo and text with life is dream",
   n=1,
   size="256x256"
 )
 image_url = response['data'][0]['url']
 
-file_name = 'images/dalle_image_shoes.png'
+file_name = 'images/dalle_image_skirt.png'
 
 res = requests.get(image_url, stream = True)
 
