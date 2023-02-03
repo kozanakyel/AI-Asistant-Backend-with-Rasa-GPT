@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify, make_response 
+from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import openai
@@ -12,6 +13,9 @@ from io import BytesIO
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
+
+app.config['JSON_SORT_KEYS'] = False
 
 PSQL_USER_ENV=os.getenv('PSQL_USER')
 PSQL_PWD_ENV=os.getenv('PSQL_PWD')
@@ -59,7 +63,7 @@ def send_audio_with_telegram(chat_id: str, file_path: str, post_file_title: str,
             files=files).json()
 
 @app.route('/question', methods=['POST'])
-async def question():
+def question():
     data = request.get_json()
     question = data['question']
     print(f'Question : {question}')
@@ -84,6 +88,28 @@ async def question():
     #                                            message=response_text))
     #bot.send_message(chat_id='756050439', text=response_text)
     return response_text
+
+@app.route('/rasachat', methods=['GET','POST'])
+def rasa():
+    
+    if request.method == 'POST':
+        id = request.get_json()['id']
+        msg = request.get_json()['msg']
+        
+        url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
+        
+        data = {
+            "sender": id,
+            "message": msg
+        }
+        
+        result = requests.post(url=url, json=data)
+        print("*"*40)
+        print(result.json())
+        print("*"*40)
+        
+    return result.json()
+
 
 if __name__ == '__main__':
     app.run(debug=True)
