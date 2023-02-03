@@ -94,31 +94,31 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
-- intent: buy_pizza
+- intent: buy_tshirt
   examples: |
-    - i'd like to buy a pizza
-    - i want a pizza
-    - can i buy a pizza
-    - I'm interested in a savory round flattened bread of Italian origin
-    - i want to buy a pizza
+    - i'd like to buy a tshirt
+    - i want a tshirt
+    - can i buy a tshirt
+    - I'm interested in very colorful tshirt
+    - i want to buy a tshirt
 - intent: inform
   examples: |
-    - i'd like a [large](pizza_size) pizza
-    - i want to order a [xl](pizza_size) [hawai](pizza_type) pizza
-    - [medium](pizza_size) pizza
-    - [xl](pizza_size)
-    - [small](pizza_size)
-    - [s](pizza_size)
-    - [pepperoni](pizza_type)
-    - give me a [mozerella](pizza_type) pizza
-    - [hawaii](pizza_type) pizza
-    - [smol](pizza_size)
-    - [hawaii](pizza_type)
-    - i want a [large](pizza_size) pizza
-    - [mozzarella](pizza_type)
-    - [hawai](pizza_type)
-    - [veggie](pizza_type)
-    - [fungi](pizza_type)
-    - i want a [large](pizza_size) pizza
-    - [vegggie](pizza_type)
-    - [veggie](pizza_type)
+    - i'd like a [large](tshirt_size) tshirt
+    - i want to order a [xl](tshirt_size) [yellow](tshirt_color) tshirt
+    - [medium](tshirt_size) tshirt
+    - [xl](tshirt_size)
+    - [small](tshirt_size)
+    - [s](tshirt_size)
+    - [red](tshirt_color)
+    - give me a [blue](tshirt_color) tshirt
+    - [red](tshirt_color) tshirt
+    - [smol](tshirt_size)
+    - [blue](tshirt_color)
+    - i want a [large](tshirt_size) tshirt
+    - [orange](tshirt_color)
+    - [red](tshirt_color)
+    - [yellow](tshirt_color)
+    - [blue](tshirt_color)
+    - i want a [large](tshirt_size) tshirt
+    - [pink](tshirt_color)
+    - [yellow](tshirt_color)
