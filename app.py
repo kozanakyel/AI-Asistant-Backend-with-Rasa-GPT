@@ -1,98 +1,30 @@
-from flask import Flask, request, jsonify, make_response
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from dotenv import load_dotenv
-import os
-import openai
-from telegram import Bot
-import asyncio
 import requests
+from dotenv import load_dotenv
+import os, shutil
+import openai
+
+from flask import Flask, request, jsonify, send_file
+from flask_restful import Resource, Api
+from flask_cors import CORS
+
 from gtts import gTTS
-from io import BytesIO
 
 load_dotenv()
+
+CHATGPT_ENV=os.getenv('CHATGPT')
+openai.api_key = CHATGPT_ENV
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['JSON_SORT_KEYS'] = False
+#Creating  api instance
+api = Api(app)
 
-PSQL_USER_ENV=os.getenv('PSQL_USER')
-PSQL_PWD_ENV=os.getenv('PSQL_PWD')
-PSQL_URI_ENV=os.getenv('PSQL_URI')
-PSQL_PORT_ENV=os.getenv('PSQL_PORT')
-PSQL_DB_NAME_ENV=os.getenv('PSQL_DB_NAME')
-
-CHATGPT_ENV=os.getenv('CHATGPT')
-
-TELEGRAM_BOT_API_ENV = os.getenv('TELEGRAM_BOT_API')
-
-CHAT_ID = os.getenv('CHAT_ID_GROUP')
-
-openai.api_key = CHATGPT_ENV
-bot = Bot(TELEGRAM_BOT_API_ENV)
-
-async def send_telegram_message(bot, chat_id, message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_API_ENV}/sendMessage?chat_id={chat_id}&text={message}"
-    #await bot.send_message(chat_id=chat_id, text=message)
-    await requests.get(url).json()
+class Rasa(Resource):
+    def get(self):
+        return jsonify({"message": "make a post request for result"})
     
-async def send_audio_telegram_message(bot, chat_id, message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_API_ENV}/sendAudio"
-    #await bot.send_message(chat_id=chat_id, text=message)
-    parameters = {
-        "chat_id": chat_id,
-        "audio": "response.mp3",
-        "caption": "response audio received"
-    }
-    await requests.get(url, data=parameters).json()
-    
-def send_audio_with_telegram(chat_id: str, file_path: str, post_file_title: str, bot_token: str) -> None:
-    with open(file_path, 'rb') as audio:
-        payload = {
-            'chat_id': chat_id,
-            'title': post_file_title,
-            'parse_mode': 'HTML'
-        }
-        files = {
-            'audio': audio.read(),
-        }
-        resp = requests.post(
-            "https://api.telegram.org/bot{token}/sendAudio".format(token=bot_token),
-            data=payload,
-            files=files).json()
-
-@app.route('/question', methods=['POST'])
-def question():
-    data = request.get_json()
-    question = data['question']
-    print(f'Question : {question}')
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=question,
-        max_tokens=256,
-        n=1
-    )
-    response_text = response['choices'][0]['text']
-    print(f'Response : {response_text}') 
-    tts = gTTS(response_text, lang='tr', tld="com")
-    tts.save(f'resp-{response_text[:5]}.mp3')
-    send_audio_with_telegram(chat_id=CHAT_ID,
-                             file_path=f'resp-{response_text[:5]}.mp3',
-                             post_file_title=f'received-{response_text[:5]}.mp3',
-                             bot_token=TELEGRAM_BOT_API_ENV)
-    #audio_file = BytesIO()
-    #tts.write_to_fp(audio_file)
-    #asyncio.ensure_future(send_audio_telegram_message(bot=bot,
-    #                                            chat_id='1678406668',
-    #                                            message=response_text))
-    #bot.send_message(chat_id='756050439', text=response_text)
-    return response_text
-
-@app.route('/rasachat', methods=['GET','POST'])
-def rasa():
-    
-    if request.method == 'POST':
+    def post(self):
         id = request.get_json()['id']
         msg = request.get_json()['msg']
         
@@ -108,8 +40,90 @@ def rasa():
         print(result.json())
         print("*"*40)
         
-    return result.json()
+        return result.json()
+    
+class RasaVoice(Resource):
+    def get(self):
+        return jsonify({"message": "make a post request for VOICE mp3 result"})
+   
+    def post(self):
+        id = request.get_json()['id']
+        msg = request.get_json()['msg']
+        
+        url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
+        
+        data = {
+            "sender": id,
+            "message": msg
+        }
+        
+        result = requests.post(url=url, json=data)
+        tts = gTTS(result.json()[0]['text'], lang='en', tld="com")
+        file_name = f'audios/rasa-{hash(tts)}.mp3'
+        tts.save(file_name)
+        
+        print("*"*40)
+        print(result.json())
+        print("*"*40)
+        
+        return send_file(file_name, mimetype="audio/mp3")
+    
+class GptText(Resource):
+    def get(self):
+        return jsonify({"message": "Response CHATGPT post a text"})
+    
+    def post(self):
+        question = request.get_json()['question']
+        
+        print(f'Question : {question}')
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=question,
+            max_tokens=256,
+            n=1
+        )
+        
+        response_text = response['choices'][0]['text']
+        print("*"*40)
+        print(f'GPT TEXT response: {response_text}')
+        print("*"*40)
+        
+        return jsonify(response_text)
+    
+class DalleClothes(Resource):
+    def get(self):
+        return jsonify({"message": "Response DALLE IMAGE post a text"})
+    
+    def post(self):
+        clothestext = request.get_json()['clothestext']
+        
+        print(f'Wanted Clothes Text : {clothestext}')
+        response = openai.Image.create(
+            prompt=clothestext,
+            n=1,
+            size="256x256"
+        )
+        image_url = response['data'][0]['url']
+        file_name = f'images/dll_img_{hash(image_url)}.png'
+        
+        res = requests.get(image_url, stream = True)
+        
+        if res.status_code == 200:
+            with open(file_name,'wb') as f:
+                shutil.copyfileobj(res.raw, f)
+            print('Image sucessfully Downloaded: ', file_name)
+            return send_file(file_name, mimetype='image/png')
+        else:
+            print('Image Couldn\'t be retrieved')
+            return jsonify({"error": "Image Couldn\'t be retrieved"})
 
+    
+api.add_resource(Rasa, '/rasachat')
+api.add_resource(RasaVoice, '/rasavoice')
+api.add_resource(GptText, '/gpttext')
+api.add_resource(DalleClothes, '/dalleimggen')
 
+    
 if __name__ == '__main__':
     app.run(debug=True)
+        

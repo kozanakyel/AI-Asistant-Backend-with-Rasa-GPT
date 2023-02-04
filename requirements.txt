@@ -1,8 +1,9 @@
-aioflask
+rasa[spacy]
+flask_restful
 psycopg2-binary
 python-dotenv
 openai
 gtts
 python-telegram-bot
-rasa[spacy]
+aioflask
 rasa-x --extra-index-url https://pypi.rasa.com/simple
