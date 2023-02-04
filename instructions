@@ -1,0 +1,3 @@
+rasa run actions   --5055
+rasa run --enable-api    --5005
+python app.py         --5000
