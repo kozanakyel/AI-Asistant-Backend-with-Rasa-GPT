@@ -1,6 +1,8 @@
 from flask_restful import Resource
 from flask import request, jsonify
-import requests
+import requests, datetime, json
+from models.chat import ChatModel
+
 
 class RasaText(Resource):
     def get(self):
@@ -16,6 +18,14 @@ class RasaText(Resource):
             "sender": username,
             "message": text
         }
+        data_chat = {
+            "text": request.get_json()['text'],
+            "username": request.get_json()['username'],
+            "publish_date": datetime.datetime.now()
+        }
+        
+        chat = ChatModel(**data_chat)  # since parser only takes in username and password, only those two will be added.
+        chat.save_to_database()
         
         result = requests.post(url=url, json=data)
         

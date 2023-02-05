@@ -1,7 +1,8 @@
-from typing import Dict, Union
+from typing import Dict, Union, List
 from database import db
+from models.chat import ChatJSON
 
-UserJSON = Dict[str, Union[int, str]]
+UserJSON = Dict[str, Union[int, str, List[ChatJSON]]]
 
 class UserModel(db.Model):
 
@@ -11,13 +12,17 @@ class UserModel(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(80))
   password = db.Column(db.String(80))
+  
+  chats = db.relationship("ChatModel", lazy="dynamic")
 
   def __init__(self, username: str, password: str):
     self.username = username
     self.password = password
     
   def json(self) -> UserJSON:
-    return {"id": self.id, "name": self.username}
+    return {"id": self.id, 
+            "name": self.username,
+            "chats": [chat.json() for chat in self.chats.all()]}
 
   @classmethod
   def find_by_username(cls, username: str) -> "UserModel":

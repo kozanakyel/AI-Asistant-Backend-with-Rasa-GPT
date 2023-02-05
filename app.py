@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from resources.user import UserRegister, User, UserLogin,UserLogout, TokenRefresh
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
+from resources.chat import Chat, ChatList
 
 from resources.rasa_text import RasaText
 from resources.rasa_voice import RasaVoice
@@ -116,6 +117,8 @@ api.add_resource(RasaText, '/rasatext')
 api.add_resource(RasaVoice, '/rasavoice')
 api.add_resource(GptText, '/gpttext')
 api.add_resource(DalleClothes, '/dalleimggen')
+api.add_resource(Chat, '/chat')
+api.add_resource(ChatList, '/chathistory')
 
     
 if __name__ == '__main__':
