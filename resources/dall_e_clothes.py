@@ -2,7 +2,9 @@ from flask_restful import Resource
 from flask import request, jsonify, send_file
 import openai
 from dotenv import load_dotenv
-import os, requests, shutil
+import os, requests, shutil, datetime
+
+from models.chat import ChatModel
 
 load_dotenv()
 
@@ -14,7 +16,8 @@ class DalleClothes(Resource):
         return jsonify({"message": "Response DALLE IMAGE post a text"})
     
     def post(self):
-        clothestext = request.get_json()['clothestext']
+        clothestext = request.get_json()['text']
+        username = request.get_json()['username']
         
         print(f'Wanted Clothes Text : {clothestext}')
         response = openai.Image.create(
@@ -24,6 +27,15 @@ class DalleClothes(Resource):
         )
         image_url = response['data'][0]['url']
         file_name = f'images/dll_img_{hash(image_url)}.png'
+        
+        data_chat = {
+            "text": request.get_json()['text'],
+            "username": username,
+            "publish_date": datetime.datetime.now()
+        }
+        
+        chat = ChatModel(**data_chat)  # since parser only takes in username and password, only those two will be added.
+        chat.save_to_database()
         
         res = requests.get(image_url, stream = True)
         

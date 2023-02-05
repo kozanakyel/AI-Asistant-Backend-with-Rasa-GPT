@@ -1,22 +1,31 @@
 from flask_restful import Resource
 from flask import request, jsonify, send_file
-import requests
+import requests, datetime
 from gtts import gTTS
+from models.chat import ChatModel
 
 class RasaVoice(Resource):
     def get(self):
         return jsonify({"message": "make a post request for VOICE mp3 result"})
     
     def post(self):
-        id = request.get_json()['id']
-        msg = request.get_json()['msg']
+        username = request.get_json()['username']
+        text = request.get_json()['text']
         
         url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
         
         data = {
-            "sender": id,
-            "message": msg
+            "sender": username,
+            "message": text
         }
+        data_chat = {
+            "text": request.get_json()['text'],
+            "username": request.get_json()['username'],
+            "publish_date": datetime.datetime.now()
+        }
+        
+        chat = ChatModel(**data_chat)  # since parser only takes in username and password, only those two will be added.
+        chat.save_to_database()
         
         result = requests.post(url=url, json=data)
         
