@@ -6,7 +6,7 @@ from gtts import gTTS
 class RasaVoice(Resource):
     def get(self):
         return jsonify({"message": "make a post request for VOICE mp3 result"})
-   
+    
     def post(self):
         id = request.get_json()['id']
         msg = request.get_json()['msg']

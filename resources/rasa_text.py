@@ -7,14 +7,14 @@ class RasaText(Resource):
         return jsonify({"message": "make a post request for result"})
     
     def post(self):
-        id = request.get_json()['id']
-        msg = request.get_json()['msg']
+        username = request.get_json()['username']
+        text = request.get_json()['text']
         
         url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
         
         data = {
-            "sender": id,
-            "message": msg
+            "sender": username,
+            "message": text
         }
         
         result = requests.post(url=url, json=data)
