@@ -4,3 +4,5 @@ rasa run --enable-api    --5005
 python app.py         --5000
 
 for telegram: ngrok http 5005
+
+rasa run actions & rasa run --enable-api
