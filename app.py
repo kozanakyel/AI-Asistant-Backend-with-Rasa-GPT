@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, session
 from flask_restful import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -6,6 +6,9 @@ from blacklist import BLACKLIST
 from database import db
 import os
 from dotenv import load_dotenv
+from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room, \
+    close_room, rooms, disconnect
+from threading import Lock
 
 from resources.user import UserRegister, User, UserLogin,UserLogout, TokenRefresh
 from resources.item import Item, ItemList
@@ -51,7 +54,23 @@ def create_tables():
 # if all goes well, the authenticate function returns user
 # which is the identity or jwt(or token)
 # jwt = JWT(app, authenticate, identity)
+async_mode = None
+
 jwt = JWTManager(app)   # JwtManager links up to the application, doesn't create /auth point
+socketio = SocketIO(app, async_mode=async_mode,  cors_allowed_origins="*")
+
+thread = None
+thread_lock = Lock()
+
+def background_thread():
+    """Example of how to send server generated events to clients."""
+    count = 0
+    while True:
+        socketio.sleep(10)
+        count += 1
+        socketio.emit('my_response',
+                      {'data': 'Server generated event', 'count': count},
+                      namespace='/test')
 
 @jwt.additional_claims_loader   # modifies the below function, and links it with JWTManager, which in turn is linked with our app
 def add_claims_to_jwt(identity):
@@ -103,6 +122,71 @@ def revoked_token_callback(self, callback):
     "description": "The token has been revoked.",
     "error": "token_revoked"
   }), 401
+
+
+class MyNamespace(Namespace):
+    def on_my_event(self, message):
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response',
+             {'data': message['data'], 'count': session['receive_count']})
+
+    def on_my_broadcast_event(self, message):
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response',
+             {'data': message['data'], 'count': session['receive_count']},
+             broadcast=True)
+
+    def on_join(self, message):
+        join_room(message['room'])
+        print(f'room no: {message["room"]}')
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        with open('OSR_us_000_0010_8k.wav', 'rb') as f:
+            audio_binary = f.read()
+        #emit('audio', {'data': audio_binary})
+        emit('my_response',
+             {'data': audio_binary,
+              'count': session['receive_count']})
+
+    def on_leave(self, message):
+        leave_room(message['room'])
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response',
+             {'data': 'In rooms: ' + ', '.join(rooms()),
+              'count': session['receive_count']})
+
+    def on_close_room(self, message):
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response', {'data': 'Room ' + message['room'] + ' is closing.',
+                             'count': session['receive_count']},
+             room=message['room'])
+        close_room(message['room'])
+
+    def on_my_room_event(self, message):
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response',
+             {'data': message['data'], 'count': session['receive_count']},
+             room=message['room'])
+
+    def on_disconnect_request(self):
+        session['receive_count'] = session.get('receive_count', 0) + 1
+        emit('my_response',
+             {'data': 'Disconnected!', 'count': session['receive_count']})
+        disconnect()
+
+    def on_my_ping(self):
+        emit('my_pong')
+
+    def on_connect(self):
+        global thread
+        with thread_lock:
+            if thread is None:
+                thread = socketio.start_background_task(background_thread)
+        emit('my_response', {'data': 'Connected', 'count': 0})
+
+    def on_disconnect(self):
+        print('Client disconnected', request.sid)
+
+socketio.on_namespace(MyNamespace('/socket'))
 
 api.add_resource(Item, '/item')
 api.add_resource(Store, '/store')
