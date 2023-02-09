@@ -22,10 +22,10 @@ PSQL_DB_NAME_ENV=os.getenv('PSQL_DB_NAME')
 
 CHATGPT_ENV=os.getenv('CHATGPT')
 CHAT_ID_BOT = os.getenv('CHAT_ID_BOT')
-CHAT_ID_GROUP = os.getenv('CHAT_ID_GROUP')
+CHAT_ID_GROUP = os.getenv('M_CHAT_ID')
 
-TOKEN = os.getenv('TELEGRAM_BOT_API')
-TELEGRAM_BOT_API_ENV = os.getenv('TELEGRAM_BOT_API')
+TOKEN = os.getenv('LIVEGPT_BOT_API')
+TELEGRAM_BOT_API_ENV = os.getenv('LIVEGPT_BOT_API')
 
 openai.api_key = CHATGPT_ENV
 bot = Bot(TELEGRAM_BOT_API_ENV)
@@ -90,10 +90,10 @@ def mp3_to_bytearray(file):
 # byte_array = mp3_to_bytearray(mp3_file)
 # print(byte_array)
 
-async def send_telegram_message(bot, chat_id, message):
+def send_telegram_message(chat_id, message):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_API_ENV}/sendMessage?chat_id={chat_id}&text={message}"
     #await bot.send_message(chat_id=chat_id, text=message)
-    await requests.get(url).json()
+    requests.get(url).json()
     
 async def send_audio_telegram_message(bot, chat_id, message):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_API_ENV}/sendAudio"
@@ -132,10 +132,11 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
     while True:
         # ses klasoru icindekileri komple silmek gerekli
         result = requests.get(url=url_info).json()
+        #print(result)
         try:
             question, chat = get_last_chat_id_and_text(result)
             #print(f"text, chat  {text} {chat}")
-            if (question, chat) != last_textchat and question[:3] == 'gpt':
+            if (question, chat) != last_textchat and question.startswith('gpt'):
                 response = openai.Completion.create(
                     engine="text-davinci-003",
                     prompt=question[2:],
@@ -143,9 +144,22 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                     n=1
                 )
                 response_text = response['choices'][0]['text']
+                
+                send_telegram_message(chat_id=chat_id_group, message=response_text)
                 print(f'Response : {response_text}') 
+               
+                last_textchat = (question, chat)
+            elif (question, chat) != last_textchat and question.startswith('vgpt'):
+                response = openai.Completion.create(
+                    engine="text-davinci-003",
+                    prompt=question[2:],
+                    max_tokens=256,
+                    n=1
+                )
+                response_text = response['choices'][0]['text']
                 tts = gTTS(response_text, lang='tr', tld="com")
                 tts.save(f'audios/ChatGPT{remove_spaces(response_text[:5])}.mp3')
+                #url_send_message(chat_id=CHAT_ID_GROUP, message=response_text)
                 send_audio_with_telegram(chat_id=chat_id_group,
                              file_path=f'audios/ChatGPT{remove_spaces(response_text[:5])}.mp3',
                              post_file_title=f'received-{remove_spaces(response_text[:5])}.mp3',
@@ -155,4 +169,5 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
         except:
             print(f'last activity not including message')
         time.sleep(1)
-    
+
+telegram_live_gpt_response(url_info=url_info, chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV)  
