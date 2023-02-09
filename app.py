@@ -6,8 +6,8 @@ from blacklist import BLACKLIST
 from database import db
 import os
 from dotenv import load_dotenv
-from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room, \
-    close_room, rooms, disconnect
+from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room
+from flask_socketio import close_room, rooms, disconnect
 from threading import Lock
 
 from resources.user import UserRegister, User, UserLogin,UserLogout, TokenRefresh
