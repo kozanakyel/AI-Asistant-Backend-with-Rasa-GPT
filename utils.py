@@ -55,6 +55,21 @@ def send_audio_with_telegram(chat_id: str, file_path: str, post_file_title: str,
             "https://api.telegram.org/bot{token}/sendAudio".format(token=bot_token),
             data=payload,
             files=files).json()
+        
+def send_photo_with_telegram(chat_id: str, file_path: str, post_file_title: str, bot_token: str) -> None:
+    with open(file_path, 'rb') as photo:
+        payload = {
+            'chat_id': chat_id,
+            'title': post_file_title,
+            'parse_mode': 'HTML'
+        }
+        files = {
+            'photo': photo.read(),
+        }
+        resp = requests.post(
+            "https://api.telegram.org/bot{token}/sendPhoto".format(token=bot_token),
+            data=payload,
+            files=files).json()
 
 
 def get_last_chat_id_and_text(updates):
@@ -104,6 +119,8 @@ async def send_audio_telegram_message(bot, chat_id, message):
         "caption": "response audio received"
     }
     await requests.get(url, data=parameters).json()
+    
+
  
 def dall_e_test():
     response = openai.Image.create(
@@ -152,7 +169,7 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
             elif (question, chat) != last_textchat and question.startswith('vgpt'):
                 response = openai.Completion.create(
                     engine="text-davinci-003",
-                    prompt=question[2:],
+                    prompt=question[3:],
                     max_tokens=256,
                     n=1
                 )
@@ -165,6 +182,25 @@ def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_a
                              post_file_title=f'received-{remove_spaces(response_text[:5])}.mp3',
                              bot_token=telegram_bot_api_env)
                 #requests.get(url=url_send_message(chat, question)).json()
+                last_textchat = (question, chat)
+            elif (question, chat) != last_textchat and question.startswith('dgpt'):
+                response = openai.Image.create(
+                    prompt=question[3:],
+                    n=1,
+                    size="256x256"
+                )
+                
+                image_url = response['data'][0]['url']
+                file_name = f'images/dll_img_{hash(image_url)}.png'
+                
+                res = requests.get(image_url, stream = True)
+                with open(file_name,'wb') as f:
+                    shutil.copyfileobj(res.raw, f)
+                send_photo_with_telegram(chat_id=chat_id_group,
+                             file_path=file_name,
+                             post_file_title=f'received-{hash(image_url)}.png',
+                             bot_token=telegram_bot_api_env)
+                
                 last_textchat = (question, chat)
         except:
             print(f'last activity not including message')

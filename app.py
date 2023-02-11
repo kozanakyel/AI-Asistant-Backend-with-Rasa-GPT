@@ -145,7 +145,7 @@ class RasaSocket(Namespace):
         
         data = {
             "username": "test-user",
-            "text": message["response_msg"]
+            "text": message["data"]
         }
         print(f"rasa_req. {data}")
         result = requests.post(url=url, json=data)
@@ -160,7 +160,7 @@ class RasaSocket(Namespace):
         
         data = {
             "username": "test-user",
-            "text": message["response_msg"]
+            "text": message["data"]
         }
         result = requests.post(url=url, json=data)
         print(f'GET rasa_req. {result}')
