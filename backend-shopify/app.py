@@ -167,38 +167,6 @@ class RasaSocket(Namespace):
         emit('my_response',
              {'data': result.content,
               'count': session['receive_count']})
-      
-      
-    def on_join(self, message):
-        join_room(message['room'])
-        print(f'room no: {message["room"]}')
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        with open('OSR_us_000_0010_8k.wav', 'rb') as f:
-            audio_binary = f.read()
-        #emit('audio', {'data': audio_binary})
-        emit('my_response',
-             {'data': audio_binary,
-              'count': session['receive_count']})
-
-    def on_leave(self, message):
-        leave_room(message['room'])
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('my_response',
-             {'data': 'In rooms: ' + ', '.join(rooms()),
-              'count': session['receive_count']})
-
-    def on_close_room(self, message):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('my_response', {'data': 'Room ' + message['room'] + ' is closing.',
-                             'count': session['receive_count']},
-             room=message['room'])
-        close_room(message['room'])
-
-    def on_my_room_event(self, message):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('my_response',
-             {'data': message['data'], 'count': session['receive_count']},
-             room=message['room'])
 
     def on_disconnect_request(self):
         session['receive_count'] = session.get('receive_count', 0) + 1
