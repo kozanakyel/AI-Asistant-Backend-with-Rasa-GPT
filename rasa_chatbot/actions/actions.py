@@ -29,7 +29,7 @@ class ValidateSimpleTshirtForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         """Validate `tshirt_size` value."""
-
+        print(f'tracker: {tracker.sender_id}')
         if slot_value.lower() not in ALLOWED_TSHIRT_SIZES:
             dispatcher.utter_message(text=f"We only accept tshirt sizes: s/m/l/xl.")
             return {"tshirt_size": None}
