@@ -76,23 +76,24 @@ def dashboard():
 
 @app.route('/login')
 def login():
-	tg_data = {
-		"id" : request.args.get('id',None),
-		"first_name" : request.args.get('first_name',None),
-		"last_name" : request.args.get('last_name', None),
-		"username" : request.args.get('username', None),
-		"photo_url" : request.args.get('photo_url', None),
-		"auth_date":  request.args.get('auth_date', None),
-		"hash" : request.args.get('hash', None)
-	}
-	#print(f'data login in first: {tg_data}')
- 
-	check_user_hash, hmac_string = check_hmac_for_user_auth(telegram_data=tg_data, login_bot_token=LOGIN_BOT_TOKEN)
-	if check_user_hash:
-		session['telegram_data'] = tg_data
-		return redirect('/dashboard')
-	
-	return jsonify({
+    if 'telegram_data' in session:
+        tg_data = session.get('telegram_data', {})
+    else:
+        tg_data = {
+			"id" : request.args.get('id',None),
+			"first_name" : request.args.get('first_name',None),
+			"last_name" : request.args.get('last_name', None),
+			"username" : request.args.get('username', None),
+			"photo_url" : request.args.get('photo_url', None),
+			"auth_date":  request.args.get('auth_date', None),
+			"hash" : request.args.get('hash', None)
+		}
+    check_user_hash, hmac_string = check_hmac_for_user_auth(telegram_data=tg_data, login_bot_token=LOGIN_BOT_TOKEN)
+    if check_user_hash:
+        session['telegram_data'] = tg_data
+        return redirect('/dashboard')
+    
+    return jsonify({
 				'hmac_string': hmac_string,
 				'tg_hash': tg_data['hash'],
 				'tg_data': tg_data

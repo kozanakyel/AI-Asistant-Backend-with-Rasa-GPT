@@ -5,10 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- PlayFab -->
+    <script type="text/javascript" src="https://download.playfab.com/PlayFabClientApi.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>shopyVerse Login Register</title>
   </head>
  <div class="py-5 text-center">
     <div class="container py-5">
@@ -17,21 +20,30 @@
           <h1 class="display-3 mb-4">ShopyVerse Platform</h1>
           <p class="lead mb-5">For the Telegram Login
             <br>shopyverse.org</p>
-            <!--
-            <script async src="https://telegram.org/js/telegram-widget.js?19" data-telegram-login="{{ data['bot_name'] }}" data-size="large" data-auth-url="{{ data['bot_domain'] }}" data-request-access="write"></script>
-          -->
+            PlayFab Getting Started Guide<br />
+            TitleID: <input class="lead mb-5" type="text" id="titleId" value="144"><br />
+            CustomID: <input class="lead mb-5" type="text" id="customId" value="GettingStartedGuide"><br />
+            <input class="lead mb-5" type="button" value="Call LoginWithCustomID" onclick="DoExampleLoginWithCustomID()"><br />
+            Result:<br />
+            <textarea class="lead mb-5" id="resultOutput" cols="60" rows="5"></textarea><br />
+            <!--          
           <script async src="https://telegram.org/js/telegram-widget.js?21" 
                   data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
                   data-auth-url="{{ data['bot_domain'] }}" data-request-access="write">
           </script>
-          <!--
-          <script async src="https://telegram.org/js/telegram-widget.js?21" data-telegram-login="{{ data['bot_name'] }}" data-size="large" data-userpic="false" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+          -->
+          <script async src="https://telegram.org/js/telegram-widget.js?21" 
+                    data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
+                    data-onauth="onTelegramAuth(user)" data-request-access="write">
+          </script>
           <script type="text/javascript">
               function onTelegramAuth(user) {
                 alert('Logged in as ' + user.first_name + ' ' + user.last_name 
                 + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
               }
           </script>
+          <!--
+          
           -->
         </div>
       </div>
@@ -45,5 +57,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
   </body>
+  <script>
+    function DoExampleLoginWithCustomID(){
+        PlayFab.settings.titleId = document.getElementById("titleId").value;
+        var loginRequest = {
+            // Currently, you need to look up the correct format for this object in the API-docs:
+            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
+            TitleId: PlayFab.settings.titleId,
+            CustomId: document.getElementById("customId").value,
+            CreateAccount: true
+        };
+    
+        PlayFabClientSDK.LoginWithCustomID(loginRequest, LoginCallback);
+    }
+    
+    var LoginCallback = function (result, error) {
+        if (result !== null) {
+            document.getElementById("resultOutput").innerHTML = "Congratulations, you made your first successful API call!";
+        } else if (error !== null) {
+            document.getElementById("resultOutput").innerHTML =
+                "Something went wrong with your first API call.\n" +
+                "Here's some debug information:\n" +
+                CompileErrorReport(error);
+        }
+    }
+    
+    // This is a utility function we haven't put into the core SDK yet.  Feel free to use it.
+    function CompileErrorReport(error) {
+        if (error === null)
+            return "";
+        var fullErrors = error.errorMessage;
+        for (var paramName in error.errorDetails)
+            for (var msgIdx in error.errorDetails[paramName])
+                fullErrors += "\n" + paramName + ": " + error.errorDetails[paramName][msgIdx];
+        return fullErrors;
+    }
+</script>
 </html>
 

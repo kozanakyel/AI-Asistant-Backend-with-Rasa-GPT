@@ -18,6 +18,10 @@
         <div class="col-md-12 text-md-left text-center align-self-center my-5">
           <h1 class="display-1">Dashboard</h1>
           <p class="lead">Successfuly logged in and the login verified</p>
+          {% for k, v in telegram_data.items() %}
+          <p class="lead">{{ k, v }}</p>
+          {% endfor %}
+          
         </div>
       </div>
     </div>
