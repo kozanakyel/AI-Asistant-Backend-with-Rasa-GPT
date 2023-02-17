@@ -15,37 +15,95 @@
       #login-form{
         display: None
       }
+      #register-form{
+        display: None
+      }
       #resultOutput{
+        display: None
+      }
+      #avatar-welcome{
+        display: None
+      }
+      #congrat-register{
+        display: None
+      }
+      #congrat-login{
         display: None
       }
     </style>
     <title>shopyVerse Login Register</title>
   </head>
- <div class="py-5 text-center">
-    <div class="container py-5">
+  <body>
+    
+ <div class="text-center">
+    <div class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md">
           <h1 class="display-3 mb-4">ShopyVerse Platform</h1>
           <p class="lead mb-5">For the Telegram Login
-            <br>shopyverse.org</p>
-            	<!-- Login Form -->
-              <script async src="https://telegram.org/js/telegram-widget.js?21" 
+          <br>shopyverse.org</p>
+            	
+          <!-- Telegram Login Widget -->
+          <div id="telegram-login-widget">
+            <script async src="https://telegram.org/js/telegram-widget.js?21" 
                   data-telegram-login="login_user_bot" data-size="large" 
                   data-onauth="onTelegramAuth(user)" data-request-access="write">
-              </script>
-              <script type="text/javascript">
-                  function onTelegramAuth(user) {
-                    console.log($('#inputUsername').val() === "")
-                    $('#inputUsername').val(user.username);
-                    if($('#inputUsername').val() !== ""){
-                      $('#login-form').show();
-                    }
-                  }
-              </script>
-	          <div id="login-form">
-               
+            </script>
+          </div>
+
+          <!-- Avatar Welcome Message -->
+          <div id="avatar-welcome">
+            <img src="" id="my_avatar"
+            class="rounded-circle" style="width: 150px;"
+            alt="Avatar" />
+            <p class="lead mb-5">Welcome ShopyVerse
+              <br><span id="username_avatar" class="font-weight-bold"></span>
+            </p>
+            <div class="container m-2">
+              <button type="button" class="btn btn-outline-primary" onclick="showLoginForm()">Login</button>
+              <button type="button" class="btn btn-outline-success" onclick="showRegisterForm()">Register</button>
+            </div>
+          </div>
+
+          <!-- Success Register Scene -->
+          <div id="congrat-register">
+            <h1 class="display-5 m-4">Congragulation Register Successfully</h1>
+            <p class="lead mb-5">You can go to Login Scene</p>
+          </div>
+
+          <!-- Success login Scene -->
+          <div id="congrat-login">
+            <h1 class="display-5 m-4">Congragulation Login Successfully</h1>
+            <p class="lead mb-5">You can go to ShopyVerse</p>
+          </div>
+
+          <!-- login Form -->
+	        <div id="login-form">               
 		          <h2>User Information</h2>
               <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+              <div class="form-floating mb-3">
+                <div class="row">
+                  <label for="logEmail" class="col-sm-4">Email address</label>
+                  <input type="email" id="logEmail" class="form-control col-sm-6" placeholder="Email address" required autofocus>
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                <div class="row">
+                  <label for="logPassword" class="col-sm-4">Password</label>
+                  <input type="password" id="logPassword" class="form-control col-sm-6" placeholder="Password" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="container">
+                  <button id="login-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabLoginWithEmail()">Sign in</button>
+                </div>
+              </div>
+          </div>
+                  
+          <!-- Register Form -->
+          <div id="register-form">               
+		          <h2>User Information</h2>
+              <h1 class="h3 mb-3 font-weight-normal">Please register in</h1>
 	            <div class="form-floating mb-3">
                 <div class="row">
                   <label for="inputUsername" class="col-sm-4">Telegram Username</label>
@@ -64,34 +122,33 @@
                   <input type="password" id="inputPassword" class="form-control col-sm-6" placeholder="Password" required>
                 </div>
               </div>
-              <div class="mb-3">
+              <div class="form-floating mb-3">
                 <div class="row">
-                  <button id="login-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabLoginWithEmail()">Sign in</button>
+                  <label for="inputRepassword" class="col-sm-4">Repassword</label>
+                  <input type="password" id="inputRepassword" class="form-control col-sm-6" placeholder="Repassword" required>
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                <div class="row">
+                  <label for="inputTon" class="col-sm-4">TON Wallet Address</label>
+                  <input type="text" id="inputTon" class="form-control col-sm-6" placeholder="TON Wallet Address">
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="container">
                   <button id="register-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabRegisterWithEmailandUsername()">Register in</button>
                 </div>
               </div>
-            </div>
+          </div>
             
-            <textarea class="lead mb-5" id="resultOutput" cols="60" rows="5"></textarea><br />
-            <!--          
-          <script async src="https://telegram.org/js/telegram-widget.js?21" 
-                  data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
-                  data-auth-url="{{ data['bot_domain'] }}" data-request-access="write">
-          </script>
-          -->
-         
-          <!--
-          
-          -->
+          <textarea class="lead mb-5" id="resultOutput" cols="60" rows="5"></textarea><br />
 
         </div>
       </div>
     </div>
+
+    
   </div>
-  <script>
-
-  </script>
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -100,17 +157,36 @@
     
   </body>
   <script>
-    function DoExampleLoginWithCustomID(){
-        PlayFab.settings.titleId = document.getElementById("titleId").value;
-        var loginRequest = {
-            // Currently, you need to look up the correct format for this object in the API-docs:
-            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
-            TitleId: PlayFab.settings.titleId,
-            CustomId: document.getElementById("customId").value,
-            CreateAccount: true
-        };
-    
-        PlayFabClientSDK.LoginWithCustomID(loginRequest, LoginCallback);
+
+    function onTelegramAuth(user) {
+      console.log($('#inputUsername').val() === "");
+      console.log(user.photo_url);
+      $('#inputUsername').val(user.username);
+      if($('#inputUsername').val() !== ""){
+        //$('#login-form').show();
+        $("#telegram-login-widget").hide();
+
+        $('#avatar-welcome').show();
+        $("#my_avatar").attr("src", user.photo_url);
+        
+        $("#username_avatar").text(user.username);
+      }
+    }
+
+    function showLoginForm(){
+      $("#login-form").show()
+      $("#register-form").hide()
+      $("#congrat-register").hide()
+      $("#congrat-login").hide()
+      $("#resultOutput").hide()
+    }
+
+    function showRegisterForm(){
+      $("#login-form").hide()
+      $("#register-form").show()
+      $("#congrat-register").hide()
+      $("#congrat-login").hide()
+      $("#resultOutput").hide()
     }
 
     function PlayfabLoginWithEmail(){
@@ -119,42 +195,81 @@
             // Currently, you need to look up the correct format for this object in the API-docs:
             // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
             TitleId: PlayFab.settings.titleId,
-            Email: document.getElementById("inputEmail").value,
-            Password: document.getElementById("inputPassword").value,
+            Email: document.getElementById("logEmail").value,
+            Password: document.getElementById("logPassword").value,
             CreateAccount: true
         };
         //console.log("email: " + document.getElementById("inputEmail").value);
         //console.log("password: " + document.getElementById("inputPassword").value);
 
         PlayFabClientSDK.LoginWithEmailAddress(loginRequest, LoginCallback);
+        $("#login-form").hide()
     }
 
     function PlayfabRegisterWithEmailandUsername(){
-      PlayFab.settings.titleId = "58967"
+
+      var pw1 = $("#inputPassword").val();  
+      var pw2 = $("#inputRepassword").val();
+
+      if(pw1 !== pw2)  
+      {   
+        console.log("password: " + $("#inputPassword").val());
+        console.log("repassword: " + $("#inputRepassword").val());
+
+        $("#resultOutput").show()
+        document.getElementById("resultOutput").innerHTML =
+                "Passwords did not match!"
+      } else {  
+        PlayFab.settings.titleId = "58967"
         var loginRequest = {
-            // Currently, you need to look up the correct format for this object in the API-docs:
-            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
-            TitleId: PlayFab.settings.titleId,
-            Username: document.getElementById("inputUsername").value,
-            Email: document.getElementById("inputEmail").value,
-            Password: document.getElementById("inputPassword").value,
-            CreateAccount: true
+          // Currently, you need to look up the correct format for this object in the API-docs:
+          // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
+          TitleId: PlayFab.settings.titleId,
+          Username: document.getElementById("inputUsername").value,
+          Email: document.getElementById("inputEmail").value,
+          Password: document.getElementById("inputPassword").value,
+          CreateAccount: true
         };
         //console.log("email: " + document.getElementById("inputEmail").value);
         //console.log("password: " + document.getElementById("inputPassword").value);
-        //console.log("username: " + document.getElementById("inputUsername").value);
+        console.log("ton wallet address: " + document.getElementById("inputTon").value);
 
-        PlayFabClientSDK.RegisterPlayFabUser(loginRequest, LoginCallback);
+        $("#register-form").hide();
+        $("#congrat-register").hide()
+        
+
+        PlayFabClientSDK.RegisterPlayFabUser(loginRequest, RegisterCallback);
+        $("#resultOutput").hide();
+        
+      }  
+        
     }
+
+    var RegisterCallback = function (result, error) {
+      //$("#resultOutput").show()
+      
+      if (result !== null) {
+        //console.log("result:" + result.status)
+        $("#congrat-register").show()
+      } else if (error !== null) {
+          console.log("error:" + error)
+          $("#resultOutput").show()
+          document.getElementById("resultOutput").innerHTML =
+              "Something went wrong with your request.\n" +
+              "Here's some information:\n" +
+              CompileErrorReport(error);
+      }
+  }
     
     var LoginCallback = function (result, error) {
-        $("#resultOutput").show()
+        //$("#resultOutput").show()
         
         if (result !== null) {
-            console.log("result:" + result.status)
-            document.getElementById("resultOutput").innerHTML = "Congratulations, you made your login process";
+          //console.log("result:" + result.status)
+          $("#congrat-login").show()
         } else if (error !== null) {
             console.log("error:" + error)
+            $("#resultOutput").show()
             document.getElementById("resultOutput").innerHTML =
                 "Something went wrong with your request.\n" +
                 "Here's some information:\n" +
