@@ -15,6 +15,9 @@
       #login-form{
         display: None
       }
+      #resultOutput{
+        display: None
+      }
     </style>
     <title>shopyVerse Login Register</title>
   </head>
@@ -27,7 +30,7 @@
             <br>shopyverse.org</p>
             	<!-- Login Form -->
               <script async src="https://telegram.org/js/telegram-widget.js?21" 
-                  data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
+                  data-telegram-login="login_user_bot" data-size="large" 
                   data-onauth="onTelegramAuth(user)" data-request-access="write">
               </script>
               <script type="text/javascript">
@@ -39,33 +42,36 @@
                     }
                   }
               </script>
-	            <div id="login-form">
+	          <div id="login-form">
                
 		          <h2>User Information</h2>
               <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 	            <div class="form-floating mb-3">
-                <label for="inputUsername" class="sr-only">Username</label>
-                <input type="text" id="inputUsername" class="form-control" placeholder="User Name">
+                <div class="row">
+                  <label for="inputUsername" class="col-sm-4">Telegram Username</label>
+                  <input type="text" id="inputUsername" class="form-control col-sm-6" placeholder="User Name">
+                </div>
               </div>
               <div class="form-floating mb-3">
-              <label for="inputEmail" class="sr-only">Email address</label>
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <div class="row">
+                  <label for="inputEmail" class="col-sm-4">Email address</label>
+                  <input type="email" id="inputEmail" class="form-control col-sm-6" placeholder="Email address" required autofocus>
+                </div>
+              </div>
+              <div class="form-floating mb-3">
+                <div class="row">
+                  <label for="inputPassword" class="col-sm-4">Password</label>
+                  <input type="password" id="inputPassword" class="form-control col-sm-6" placeholder="Password" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="row">
+                  <button id="login-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabLoginWithEmail()">Sign in</button>
+                  <button id="register-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabRegisterWithEmailandUsername()">Register in</button>
+                </div>
+              </div>
             </div>
-            <div class="form-floating mb-3">
-              <label for="inputPassword" class="sr-only">Password</label>
-              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            </div>
-            <div class="form-floating mb-3">
-              <button id="login-btn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-              <button id="register-btn" class="btn btn-lg btn-primary btn-block" type="submit">Register in</button>
-              <p class="mt-5 mb-3 text-muted">&copy; shopyverse.org</p>
-            </div>
-            </div>
-
-            TitleID: <input class="lead mb-5" type="text" id="titleId" value="144"><br />
-            CustomID: <input class="lead mb-5" type="text" id="customId" value="GettingStartedGuide"><br />
-            <input class="lead mb-5" type="button" value="Call LoginWithCustomID" onclick="DoExampleLoginWithCustomID()"><br />
-            Result:<br />
+            
             <textarea class="lead mb-5" id="resultOutput" cols="60" rows="5"></textarea><br />
             <!--          
           <script async src="https://telegram.org/js/telegram-widget.js?21" 
@@ -106,14 +112,52 @@
     
         PlayFabClientSDK.LoginWithCustomID(loginRequest, LoginCallback);
     }
+
+    function PlayfabLoginWithEmail(){
+      PlayFab.settings.titleId = "58967"
+        var loginRequest = {
+            // Currently, you need to look up the correct format for this object in the API-docs:
+            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
+            TitleId: PlayFab.settings.titleId,
+            Email: document.getElementById("inputEmail").value,
+            Password: document.getElementById("inputPassword").value,
+            CreateAccount: true
+        };
+        //console.log("email: " + document.getElementById("inputEmail").value);
+        //console.log("password: " + document.getElementById("inputPassword").value);
+
+        PlayFabClientSDK.LoginWithEmailAddress(loginRequest, LoginCallback);
+    }
+
+    function PlayfabRegisterWithEmailandUsername(){
+      PlayFab.settings.titleId = "58967"
+        var loginRequest = {
+            // Currently, you need to look up the correct format for this object in the API-docs:
+            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
+            TitleId: PlayFab.settings.titleId,
+            Username: document.getElementById("inputUsername").value,
+            Email: document.getElementById("inputEmail").value,
+            Password: document.getElementById("inputPassword").value,
+            CreateAccount: true
+        };
+        //console.log("email: " + document.getElementById("inputEmail").value);
+        //console.log("password: " + document.getElementById("inputPassword").value);
+        //console.log("username: " + document.getElementById("inputUsername").value);
+
+        PlayFabClientSDK.RegisterPlayFabUser(loginRequest, LoginCallback);
+    }
     
     var LoginCallback = function (result, error) {
+        $("#resultOutput").show()
+        
         if (result !== null) {
-            document.getElementById("resultOutput").innerHTML = "Congratulations, you made your first successful API call!";
+            console.log("result:" + result.status)
+            document.getElementById("resultOutput").innerHTML = "Congratulations, you made your login process";
         } else if (error !== null) {
+            console.log("error:" + error)
             document.getElementById("resultOutput").innerHTML =
-                "Something went wrong with your first API call.\n" +
-                "Here's some debug information:\n" +
+                "Something went wrong with your request.\n" +
+                "Here's some information:\n" +
                 CompileErrorReport(error);
         }
     }
