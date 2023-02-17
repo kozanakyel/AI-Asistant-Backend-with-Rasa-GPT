@@ -11,6 +11,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <style>
+      #login-form{
+        display: None
+      }
+    </style>
     <title>shopyVerse Login Register</title>
   </head>
  <div class="py-5 text-center">
@@ -20,7 +25,43 @@
           <h1 class="display-3 mb-4">ShopyVerse Platform</h1>
           <p class="lead mb-5">For the Telegram Login
             <br>shopyverse.org</p>
-            PlayFab Getting Started Guide<br />
+            	<!-- Login Form -->
+              <script async src="https://telegram.org/js/telegram-widget.js?21" 
+                  data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
+                  data-onauth="onTelegramAuth(user)" data-request-access="write">
+              </script>
+              <script type="text/javascript">
+                  function onTelegramAuth(user) {
+                    console.log($('#inputUsername').val() === "")
+                    $('#inputUsername').val(user.username);
+                    if($('#inputUsername').val() !== ""){
+                      $('#login-form').show();
+                    }
+                  }
+              </script>
+	            <div id="login-form">
+               
+		          <h2>User Information</h2>
+              <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+	            <div class="form-floating mb-3">
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input type="text" id="inputUsername" class="form-control" placeholder="User Name">
+              </div>
+              <div class="form-floating mb-3">
+              <label for="inputEmail" class="sr-only">Email address</label>
+              <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            </div>
+            <div class="form-floating mb-3">
+              <label for="inputPassword" class="sr-only">Password</label>
+              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="form-floating mb-3">
+              <button id="login-btn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+              <button id="register-btn" class="btn btn-lg btn-primary btn-block" type="submit">Register in</button>
+              <p class="mt-5 mb-3 text-muted">&copy; shopyverse.org</p>
+            </div>
+            </div>
+
             TitleID: <input class="lead mb-5" type="text" id="titleId" value="144"><br />
             CustomID: <input class="lead mb-5" type="text" id="customId" value="GettingStartedGuide"><br />
             <input class="lead mb-5" type="button" value="Call LoginWithCustomID" onclick="DoExampleLoginWithCustomID()"><br />
@@ -32,23 +73,18 @@
                   data-auth-url="{{ data['bot_domain'] }}" data-request-access="write">
           </script>
           -->
-          <script async src="https://telegram.org/js/telegram-widget.js?21" 
-                    data-telegram-login="{{ data['bot_name'] }}" data-size="large" 
-                    data-onauth="onTelegramAuth(user)" data-request-access="write">
-          </script>
-          <script type="text/javascript">
-              function onTelegramAuth(user) {
-                alert('Logged in as ' + user.first_name + ' ' + user.last_name 
-                + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
-              }
-          </script>
+         
           <!--
           
           -->
+
         </div>
       </div>
     </div>
   </div>
+  <script>
+
+  </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
