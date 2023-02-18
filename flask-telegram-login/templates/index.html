@@ -30,8 +30,22 @@
       #congrat-login{
         display: None
       }
+      #login-playfab{
+        overflow: hidden;
+        border: none;
+        height: 40px;
+        width: 234px;
+        font-size: 16px;
+        line-height: 20px;
+        padding: 9px 21px 11px;
+        border-radius: 20px;
+      }
     </style>
     <title>shopyVerse Login Register</title>
+    <script>
+      $('button.tgme_widget_login_button').text('Register with Telegram');
+      button.tgme_widget_login_button
+    </script>
   </head>
   <body>
     
@@ -51,6 +65,11 @@
             </script>
           </div>
 
+          <!-- playfab Login Widget -->
+          <div id="playfab-login-widget">
+            <button type="button" id="login-playfab" class="btn btn-warning" onclick="showLoginForm()">Login with Playfab</button>
+          </div>
+
           <!-- Avatar Welcome Message -->
           <div id="avatar-welcome">
             <img src="" id="my_avatar"
@@ -61,7 +80,7 @@
             </p>
             <div class="container m-2">
               <button type="button" class="btn btn-outline-primary" onclick="showLoginForm()">Login</button>
-              <button type="button" class="btn btn-outline-success" onclick="showRegisterForm()">Register</button>
+              <button type="button" class="btn btn-outline-warning" onclick="showRegisterForm()">Register</button>
             </div>
           </div>
 
@@ -136,7 +155,7 @@
               </div>
               <div class="mb-3">
                 <div class="container">
-                  <button id="register-btn" class="btn btn-lg btn-primary m-1 col-sm-4" onclick="PlayfabRegisterWithEmailandUsername()">Register in</button>
+                  <button id="register-btn" class="btn btn-lg btn-warning m-1 col-sm-4" onclick="PlayfabRegisterWithEmailandUsername()">Register in</button>
                 </div>
               </div>
           </div>
@@ -165,6 +184,7 @@
       if($('#inputUsername').val() !== ""){
         //$('#login-form').show();
         $("#telegram-login-widget").hide();
+        $("#playfab-login-widget").hide();
 
         $('#avatar-welcome').show();
         $("#my_avatar").attr("src", user.photo_url);
