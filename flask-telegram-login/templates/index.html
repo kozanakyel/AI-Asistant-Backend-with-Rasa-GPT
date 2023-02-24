@@ -48,7 +48,7 @@
     </script>
   </head>
   <body>
-    
+   
  <div class="text-center">
     <div class="container">
       <div class="row">
@@ -96,7 +96,7 @@
             <p class="lead mb-5">You can go to ShopyVerse</p>
           </div>
 
-          <!-- login Form -->
+          <!-- Login Form -->
 	        <div id="login-form">               
 		          <h2>User Information</h2>
               <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -159,7 +159,7 @@
                 </div>
               </div>
           </div>
-            
+          <!-- See the result information for api response --> 
           <textarea class="lead mb-5" id="resultOutput" cols="60" rows="5"></textarea><br />
 
         </div>
@@ -212,8 +212,6 @@
     function PlayfabLoginWithEmail(){
       PlayFab.settings.titleId = "58967"
         var loginRequest = {
-            // Currently, you need to look up the correct format for this object in the API-docs:
-            // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
             TitleId: PlayFab.settings.titleId,
             Email: document.getElementById("logEmail").value,
             Password: document.getElementById("logPassword").value,
@@ -242,8 +240,6 @@
       } else {  
         PlayFab.settings.titleId = "58967"
         var loginRequest = {
-          // Currently, you need to look up the correct format for this object in the API-docs:
-          // https://api.playfab.com/Documentation/Client/method/LoginWithCustomID
           TitleId: PlayFab.settings.titleId,
           Username: document.getElementById("inputUsername").value,
           Email: document.getElementById("inputEmail").value,
@@ -252,12 +248,11 @@
         };
         //console.log("email: " + document.getElementById("inputEmail").value);
         //console.log("password: " + document.getElementById("inputPassword").value);
-        console.log("ton wallet address: " + document.getElementById("inputTon").value);
+        //console.log("ton wallet address: " + document.getElementById("inputTon").value);
 
         $("#register-form").hide();
         $("#congrat-register").hide()
         
-
         PlayFabClientSDK.RegisterPlayFabUser(loginRequest, RegisterCallback);
         $("#resultOutput").hide();
         

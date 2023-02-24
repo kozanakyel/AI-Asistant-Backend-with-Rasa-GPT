@@ -40,7 +40,7 @@ def telegram_auth_required(func):
 
 	return wrapper
 
-@app.route('/')
+@app.route('/index')
 def index():
 	data = {'bot_name': app.config['BOT_NAME'], 'bot_domain': app.config['BOT_DOMAIN']}
 	#print(f'data for bot: {data}')

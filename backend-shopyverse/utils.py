@@ -146,6 +146,7 @@ def dall_e_test():
 # chat_id_group=CHAT_ID_GROUP, telegram_bot_api_env=TELEGRAM_BOT_API_ENV
 def telegram_live_gpt_response(url_info: str, chat_id_group: str, telegram_bot_api_env: str):
     last_textchat = (None, None)
+    print('Hello GPt, VGPT and DGPT running')
     while True:
         # ses klasoru icindekileri komple silmek gerekli
         result = requests.get(url=url_info).json()
