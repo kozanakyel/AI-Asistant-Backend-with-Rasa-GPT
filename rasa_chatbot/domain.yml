@@ -39,9 +39,9 @@ forms:
       - tshirt_color
 responses:
   utter_greet:
-  - text: Hey! How are you?
+  - text: Hello! We are SHOPYVERSE family. You can speak for buying a tshirt directly via the this channel. Or you can use our GPT bots. Use /gpt for getting Text response. Use /vgpt for getting Voice response. Use /dpt for creating AI images from Dalle model. How are you?
   utter_cheer_up:
-  - image: https://i.imgur.com/nGF1K8f.jpg
+  - image: https://pbs.twimg.com/profile_images/1605511627255689218/hmezwD_0_400x400.jpg
     text: 'Here is something to cheer you up:'
   utter_did_that_help:
   - text: Did that help you?
