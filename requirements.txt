@@ -7,4 +7,3 @@ psycopg2-binary
 python-dotenv
 openai
 gtts
-python-telegram-bot
