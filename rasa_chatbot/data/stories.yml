@@ -41,7 +41,7 @@ stories:
   - slot_was_set:
     - tshirt_size: large
   - slot_was_set:
-    - tshirt_size: large
+    - tshirt_size: null
   - slot_was_set:
     - requested_slot: tshirt_color
   - slot_was_set:
@@ -59,7 +59,7 @@ stories:
   - slot_was_set:
     - tshirt_color: blue
   - slot_was_set:
-    - tshirt_color: blue
+    - tshirt_color: null
   - slot_was_set:
     - requested_slot: null
   - active_loop: null
