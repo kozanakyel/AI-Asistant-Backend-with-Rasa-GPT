@@ -1,4 +1,4 @@
-### SHOPYVERSE - RASA ASI-based chatbot - GPT bot 
+### SHOPYVERSE - RASA AI-based chatbot - GPT bot 
 
 This Program include Backend, Rasa chatbot and Gpt bot for both Telegram user group and Meatverse integration.
 For the first step and runnig locally documentation
