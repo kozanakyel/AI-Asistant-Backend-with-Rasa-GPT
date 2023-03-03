@@ -1,4 +1,6 @@
 for telegram: ngrok http 5005
 
-rasa run actions & rasa run --enable-api
+rasa run actions
+
+rasa run --enable-api
 
