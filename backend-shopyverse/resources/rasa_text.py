@@ -2,6 +2,7 @@ from flask_restful import Resource
 from flask import request, jsonify
 import requests, datetime, json
 from models.chat import ChatModel
+import config
 
 
 class RasaText(Resource):
@@ -12,7 +13,7 @@ class RasaText(Resource):
         username = request.get_json()['username']
         text = request.get_json()['text']
         
-        url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
+        url = config.RASA_SERVER
         
         data = {
             "sender": username,

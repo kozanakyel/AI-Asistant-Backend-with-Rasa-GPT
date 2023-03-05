@@ -1,4 +1,3 @@
-rasa[spacy]
 flask
 flask-restful
 flask-socketio
@@ -7,7 +6,6 @@ psycopg2-binary
 python-dotenv
 openai
 gtts
-tonsdk
 flask_cors
 flask-sqlalchemy
 gunicorn

@@ -20,6 +20,8 @@ from resources.rasa_voice import RasaVoice
 from resources.gpt_text import GptText
 from resources.dall_e_clothes import DalleClothes
 
+import config
+
 #from socket_app import MyNamespace, socketio
 
 load_dotenv()
@@ -141,7 +143,7 @@ class RasaSocket(Namespace):
         
     def on_rasa_text(self, message):
         session['receive_count'] = session.get('receive_count', 0) + 1
-        url = 'http://127.0.0.1:5000/rasatext'
+        url =f'{config.APP_SERVER}/rasatext'
         
         data = {
             "username": "test-user",
@@ -156,7 +158,7 @@ class RasaSocket(Namespace):
 
     def on_rasa_voice(self, message):
         session['receive_count'] = session.get('receive_count', 0) + 1
-        url = 'http://127.0.0.1:5000/rasavoice'
+        url =f'{config.APP_SERVER}/rasavoice'
         
         data = {
             "username": "test-user",
@@ -207,5 +209,6 @@ api.add_resource(ChatList, '/chathistory')
 
     
 if __name__ == '__main__':
-    app.run(debug=True)
+  #port = int(os.getenv("PORT"))
+  app.run(port=5000, host='0.0.0.0')
         

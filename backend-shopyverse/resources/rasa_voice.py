@@ -3,6 +3,7 @@ from flask import request, jsonify, send_file
 import requests, datetime
 from gtts import gTTS
 from models.chat import ChatModel
+import config
 
 class RasaVoice(Resource):
     def get(self):
@@ -12,7 +13,7 @@ class RasaVoice(Resource):
         username = request.get_json()['username']
         text = request.get_json()['text']
         
-        url = 'http://0.0.0.0:5005/webhooks/rest/webhook'
+        url = config.RASA_SERVER
         
         data = {
             "sender": username,
