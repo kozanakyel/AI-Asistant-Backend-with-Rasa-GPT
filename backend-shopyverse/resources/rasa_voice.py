@@ -31,7 +31,7 @@ class RasaVoice(Resource):
         result = requests.post(url=url, json=data)
         
         if result.json() == []:
-            return {"error messages": "Not Any including response for this conversation query"}
+            return {"error": "Yet I'm not trained for this!"}, 402
         tts = gTTS(result.json()[0]['text'], lang='en', tld="com")
         file_name = f'audios/rasa-{hash(tts)}.mp3'
         tts.save(file_name)
@@ -40,4 +40,4 @@ class RasaVoice(Resource):
         print(result.json())
         print("*"*40)
         
-        return send_file(file_name, mimetype="audio/mp3")
+        return send_file(file_name, mimetype="audio/mp3"), 201

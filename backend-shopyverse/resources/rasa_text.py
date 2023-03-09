@@ -31,10 +31,10 @@ class RasaText(Resource):
         result = requests.post(url=url, json=data)
         
         if result.json() == []:
-            return {"error messages": "Not Any including response for this conversation query"}
+            return {"error": "Yet I'm not trained for this!"}, 402
         
         print("*"*40)
         print(result.json())
         print("*"*40)
         
-        return result.json()
+        return result.json(), 201
