@@ -7,7 +7,10 @@ stories:
   - intent: greet
   - action: utter_greet
   - intent: mood_great
-  - action: utter_happy
+  - action: utter_qa_info
+  - intent: affirm
+  - action: utter_info_shopyverse 
+
 
 - story: sad path 1
   steps:

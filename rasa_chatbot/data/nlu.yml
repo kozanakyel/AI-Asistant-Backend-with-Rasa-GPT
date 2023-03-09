@@ -122,3 +122,46 @@ nlu:
     - i want a [large](tshirt_size) tshirt
     - [pink](tshirt_color)
     - [yellow](tshirt_color)
+
+- intent: address_search
+  examples: |
+    - i want to play [bowling](address_loc)
+    - i like the [bowling](address_loc)
+    - i prefer to [bowling](address_loc)
+    - [bowling](address_loc) is ok i think
+    - [bowling](address_loc) is super
+    - i want to got a [Sport](address_loc) center
+    - i prefer to make a little bit [sport](address_loc)
+    - i like the [sport](address_loc)
+    - [sport](address_loc) is good
+    - i want to go a [shopping](address_loc)
+    - i like [shopping](address_loc)
+    - l like the clothes and [shopping](address_loc)
+    - im going to [shopping](address_loc)
+    - [bowling](address_loc)
+    - [sports](address_loc)
+    - [shopping](address_loc)
+
+
+- intent: info_shopyverse 
+  examples: |
+    - what is the shopyverse?
+    - can you give any info about shopyverse
+    - is there any description for there 
+    - any information 
+    - can you give a help me 
+    - what is going on?
+    - what do you do in this place
+
+- intent: gpt_info
+  examples: |
+    - do you know the chatgpt
+    - can you reach the chatgpt
+    - generative pretrained natural language model
+    - do have an AI
+    - artifical intelligence i think is good 
+    - do you know the everyting in the world
+    - you know the everything
+    - can you create any image  
+    - what is the gpt or chatgpt 
+    - is the shopyver is reltaed to chatgpt  

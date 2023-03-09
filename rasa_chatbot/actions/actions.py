@@ -17,6 +17,13 @@ from rasa_sdk.types import DomainDict
 ALLOWED_TSHIRT_SIZES = ["small", "medium", "large", "extra-large", "extra large", "s", "m", "l", "xl"]
 ALLOWED_TSHIRT_COLOR = ["red", "blue", "yellow", "orange", "pink"]
 
+location_db = {
+    'shopping': 'For the Shopping Center you can follow The square will turn to the first left and stay on the right when you move forward a little.',
+    'bowling': 'For playing Bowling. When you enter the first left of the square, there is a bowling alley in the new building standing right across it. enjoy.',
+    'sport': 'for going to Sport Center You should have to turn back from here and enter right from where the street ends. good luck'
+}
+
+
 class ValidateSimpleTshirtForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_simple_tshirt_form"
@@ -49,4 +56,30 @@ class ValidateSimpleTshirtForm(FormValidationAction):
             dispatcher.utter_message(text=f"I don't recognize that tshirt. We serve {'/'.join(ALLOWED_TSHIRT_COLOR)}.")
             return {"tshirt_color": None}
         dispatcher.utter_message(text=f"OK! You want to have a {slot_value} tshirt.")
+        
         return {"tshirt_color": slot_value}
+    
+    
+class ChooseAddress(Action):
+    def name(self) -> Text:
+        return "choose_address"
+    
+    def run(self, 
+            dispatcher: CollectingDispatcher,  #send msg to user
+            tracker: Tracker,   # fetch info/intent/entities
+            domain: DomainDict) -> List[Dict[Text, Any]]:
+        
+        print("Custom code goes here!")
+        
+        current_place = next(tracker.get_latest_entity_values("address_loc"), None)
+        
+        #if not current_place:
+            #msg = f'can you give a addres for directions'
+            #dispatcher.utter_message(text=msg)
+            #return []
+        if current_place:
+            print(f'current place: {current_place}')
+            dispatcher.utter_message(text=location_db[current_place])
+            return []
+        
+        return []

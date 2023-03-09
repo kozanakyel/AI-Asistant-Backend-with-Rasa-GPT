@@ -7,6 +7,16 @@ rules:
   - intent: goodbye
   - action: utter_goodbye
 
+- rule: Say greet
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- rule: get information about shopyverse 
+  steps: 
+  - intent: info_shopyverse 
+  - action: utter_info_shopyverse
+
 - rule: Say 'I am a bot' anytime the user challenges
   steps:
   - intent: bot_challenge
@@ -40,4 +50,16 @@ rules:
   # Return to form after handling the `bot_challenge` intent
   - action: simple_tshirt_form
   - active_loop: simple_tshirt_form
+
+
+- rule: Tell the address location
+  steps:
+  - intent: address_search
+  - action: choose_address
+
+- rule: gpt openai info
+  steps:
+  - intent: gpt_info
+  - action: utter_gpt    
+
 
